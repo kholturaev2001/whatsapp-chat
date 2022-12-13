@@ -7,7 +7,6 @@ const Login = ({ onIdSubmit }) => {
 
   function handleSubmit(e){
     e.preventDefault();
-
     onIdSubmit(idRef.current.value);
   };
 
@@ -27,7 +26,7 @@ const Login = ({ onIdSubmit }) => {
           <Form.Label>Enter Your Id</Form.Label>
           <Form.Control type="text" ref={idRef} required></Form.Control>
         </Form.Group>
-        <Button type="submit" className="mr-2">
+        <Button type="submit" style={{ margin: "10px 0" }}>
           {" "}
           Login{" "}
         </Button>

@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 const PREFIX = "whatsapp-chat-";
 
 export const useLocalStorage = (key, initialValue) => {
-  console.log("key is", key);
   const prefixedKey = PREFIX + key;
   const [value, setValue] = useState(() => {
     const jsonValue = localStorage.getItem(prefixedKey);
