@@ -1,14 +1,16 @@
 import React, { useRef } from "react";
 import { Modal, Form, Button } from "react-bootstrap";
+import { useContacts } from "../context/ContactsProvider";
 
 const NewContactModal = ({ closeModal }) => {
   const idRef = useRef();
   const nameRef = useRef();
+  const { createContact } = useContacts();
 
   function handleSubmit(e) {
     e.preventDefault();
+    createContact(idRef.current.value, nameRef.current.value);
     closeModal();
-    console.log("submitted");
   }
   return (
     <>
@@ -17,14 +19,14 @@ const NewContactModal = ({ closeModal }) => {
         <Form onSubmit={handleSubmit}>
           <Form.Group>
             <Form.Label>Id</Form.Label>
-            <Form.Control type="text" ref={idRef} required></Form.Control>
+            <Form.Control type="text" ref={idRef} />
           </Form.Group>
           <Form.Group>
             <Form.Label>Name</Form.Label>
-            <Form.Control type="text" ref={nameRef} required></Form.Control>
+            <Form.Control type="text" ref={nameRef} />
           </Form.Group>
           <Button type="submit" style={{ margin: "10px 0" }}>
-            Create {/* PAUSED ON 36'09" */}
+            Create
           </Button>
         </Form>
       </Modal.Body>
