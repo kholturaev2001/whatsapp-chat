@@ -9,11 +9,11 @@ function App() {
   const [id, setId] = useLocalStorage("id");
 
   const dashboard = (
-    <ConversationsProvider>
-      <ContactsProvider>
+    <ContactsProvider>
+      <ConversationsProvider>
         <Dashboard id={id} />
-      </ContactsProvider>
-    </ConversationsProvider>
+      </ConversationsProvider>
+    </ContactsProvider>
   );
 
   return id ? dashboard : <Login onIdSubmit={setId} />;
