@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { useContacts } from "./ContactsProvider";
 
@@ -8,21 +8,49 @@ export function useConversations() {
   return useContext(ConversationsContext);
 }
 
-export function ConversationsProvider({ children }) {
+export function ConversationsProvider({ id, children }) {
   const [conversations, setConversations] = useLocalStorage(
     "conversations",
     []
   );
+  const [selectedConversationIndex, setSelectedConversationIndex] = useState(0);
   const { contacts } = useContacts() || [];
 
   function createConversation(recipients) {
-    console.log("recipients: ", recipients);
     setConversations((prevConversations) => {
       return [...prevConversations, { recipients, messages: [] }];
     });
   }
 
-  const formatedConversations = conversations.map((conversation) => {
+  function addMessageToConversation({ recipients, text, sender }) {
+    setConversations((prevConversations) => {
+      let madeChange = false;
+      const newMessage = { sender, text };
+      const newConversations = prevConversations.map((conversation) => {
+        if (arrayEquality(conversation.recipients, recipients)) {
+          madeChange = true;
+          return {
+            ...conversation,
+            messages: [...conversation.messages, newMessage],
+          };
+        }
+
+        return conversation;
+      });
+
+      if (madeChange) {
+        return newConversations;
+      } else {
+        return [...prevConversations, { recipients, messages: [newMessage] }];
+      }
+    });
+  }
+
+  function sendMessage(recipients, text) {
+    addMessageToConversation({ recipients, text, sender: id });
+  }
+
+  const formatedConversations = conversations.map((conversation, id) => {
     const recipients = conversation.recipients.map((recipient) => {
       const contact = contacts.find((contact) => {
         return contact.id === recipient;
@@ -31,21 +59,34 @@ export function ConversationsProvider({ children }) {
       return { id: recipient, name };
     });
 
-    return { ...conversation, recipients };
+    const selected = id === selectedConversationIndex;
+    return { ...conversation, recipients, selected };
   });
 
-  //   const value = ;
+  const value = {
+    conversations: formatedConversations,
+    selectedConversation: formatedConversations[selectedConversationIndex],
+    sendMessage,
+    selectConversationIndex: setSelectedConversationIndex,
+    createConversation,
+  };
 
   return (
     <div>
-      <ConversationsContext.Provider
-        value={{
-          conversations: formatedConversations,
-          createConversation,
-        }}
-      >
+      <ConversationsContext.Provider value={value}>
         {children}
       </ConversationsContext.Provider>
     </div>
   );
+}
+
+function arrayEquality(a, b) {
+  if (a.length !== b.length) return false;
+
+  a.sort();
+  b.sort();
+
+  return a.every((element, id) => {
+    return element === b[id];
+  });
 }
