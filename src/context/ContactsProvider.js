@@ -15,7 +15,7 @@ export function ContactsProvider({ children }) {
       return [...prevContacts, { id, name }];
     });
   }
-  console.log(contacts);
+  
   return (
     <div>
       <ContactsContext.Provider value={{ contacts, createContact }}>

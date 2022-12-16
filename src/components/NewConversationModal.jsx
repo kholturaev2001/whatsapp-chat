@@ -3,11 +3,12 @@ import { Modal } from "react-bootstrap";
 import { Form } from "react-bootstrap";
 import { Button } from "react-bootstrap";
 import { useContacts } from "../context/ContactsProvider";
-import { useConversations } from "../context/conversationsProvider";
+import { useConversations } from "../context/ConversationsProvider";
 
 const NewConversationModal = ({ closeModal }) => {
   const [selectedContactIds, setSelectedContactIds] = useState([]);
   const { contacts } = useContacts();
+  const { createConversation } = useConversations()
 
   function handleSubmit(e) {
     e.preventDefault();
