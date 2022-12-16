@@ -4,7 +4,6 @@ import { useConversations } from "./../context/ConversationsProvider";
 
 const Conversations = () => {
   const { conversations, selectConversationIndex } = useConversations();
-  console.log("conversations", conversations);
 
   return (
     <ListGroup variant="flush">
